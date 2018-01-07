@@ -1,0 +1,15 @@
+{
+  "name": "kafka-frontend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "kafka": "ifwe/node-kafka#master",
+    "websocket": "^1.0.25"
+  }
+}
