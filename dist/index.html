@@ -1,18 +1,11 @@
+
+<head>
+	<!-- Plotly.js -->
+	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
 <h1>Messages</h1>
 <ul id="messages">
 </ul>
 
-<script>
-var list = "";
-var exampleSocket = new WebSocket("ws://localhost:3000")
-exampleSocket.onmessage = function (event) {
-	var messages = event.data.split(",");
-	messages.forEach(function(val){
-		console.log("val: ", val)
-		if (val) {
-			list += `<li>${val}</li>`;
-			document.getElementById("messages").innerHTML = list;
-		}
-	})
-}
-</script>
+<div id="myDiv"></div>
+<script src="/scripts/plotly.js"></script>

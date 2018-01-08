@@ -30,6 +30,7 @@ var config = {
 
 var server = require('http').createServer(function (request, response) {
 	var file = path.normalize(config.root + request.url);
+	console.log('req: ', file)
 	file = (file == config.root + '/') ? file + config.index : file;
 
 	console.log('Trying to serve: ', file);
@@ -81,18 +82,23 @@ wsServer = new WebSocketServer({httpServer: server});
 wsServer.on('request', function(request) {
 	var connection = request.accept(null, request.origin);
 	var kafkaBin = "/Users/forrestbthomas/kafka_install/kafka_2.11-1.0.0/bin/kafka-console-consumer.sh"
-	var k = exec(kafkaBin, ["--bootstrap-server", "localhost:9092", "--topic", "test", "--from-beginning"])
+	var k = exec(kafkaBin, ["--bootstrap-server", "localhost:9092", "--topic", process.argv[2] || "test", "--from-beginning"])
 
 	k.stderr.on('data', (data) => {
 		console.log(`stderr: ${data}`)
 	});
 	k.stdout.on('data', (data) => {
 		console.log(`stdout: ${data}`);
-		data = data.toString().split("\n")
+		data = data.toString().split("\n").join('')
+		fs.appendFile('./dist/data/us.csv', data + '\n', (err) => {
+			if (err) throw err;
+			connection.sendUTF('Appended: ', data);
+			console.log('sent: ', data)
+		});
+
 		console.log("sending to client")
 		connection.sendUTF(data.toString());
 	});
 	k.on('error', (err) => {console.log(`error: ${err}`)})
 	k.on('close', () => { console.log("closing....")});
-
-	});
+});
